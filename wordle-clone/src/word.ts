@@ -3,21 +3,30 @@ import { join } from 'path';
 
 export default class Word {
     wordsQueue: Array<string> = [];
-    _currentWord: string|null = null;
-    //intervalId: NodeJS.Timer;
+    currentWord: string|null = null;
+    validWordSet: Set<string> = new Set();
+    intervalId: NodeJS.Timer;
     
     constructor() {
-        //this.intervalId = setInterval(() => {
-            // TODO: impl timer
-        //});
+        // 24 hours
+        const intervalLen = 24 * 60 * 60 * 1000;
+
+        this.intervalId = setInterval(() => {
+            this.selectNextWord();
+        }, intervalLen);
     }
 
     public async getCurrentWord(): Promise<string> {
-        if (this._currentWord === null) {
+        if (this.currentWord === null) {
             await this.selectNextWord();
         }
 
-        return this._currentWord as string;
+        console.log(this.currentWord);
+        return this.currentWord as string;
+    }
+
+    public isValidWord(word: string) {
+        return this.validWordSet.has(word);
     }
 
     private async loadWordQueue(): Promise<null> {
@@ -30,6 +39,7 @@ export default class Word {
                 }
 
                 let words = data.trim().split('\n');
+                this.validWordSet = new Set(words);
 
                 while (words.length > 0) {
                     const i = Math.floor(Math.random() * words.length);
@@ -53,6 +63,6 @@ export default class Word {
             await this.loadWordQueue();
         }
 
-        this._currentWord = this.wordsQueue.pop() as string;
+        this.currentWord = this.wordsQueue.pop() as string;
     }
 };

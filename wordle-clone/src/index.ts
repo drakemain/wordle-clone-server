@@ -3,7 +3,7 @@ import bodyParser from 'body-parser';
 
 import Word from './word';
 import checkGuessedWord from './word_check';
-import { GuessResponse } from './types';
+import { ErrorCode, GuessResponse, WordleError } from './types';
 
 const app = express();
 const wordManager = new Word();
@@ -25,12 +25,25 @@ app.get('/guess/:word', async (req, res) => {
     const response: GuessResponse = {};
 
     try {
+        if (!wordManager.isValidWord(guessedWord)) {
+            throw new WordleError('Guess is not in word list.', ErrorCode.WordNotInList);
+        }
+
         response.payload = checkGuessedWord(guessedWord, actualWord);
         res.status(200);
         res.send(response);
     } catch (e) {
         res.status(300);
-        response.errmsg = (e as Error).message;
+
+        if (e instanceof WordleError) {
+            response.errcode = e.code;
+            response.errmsg = e.message;
+        } else {
+            console.error('UNHANDLED ERROR!');
+            console.error(e);
+            response.errmsg = 'An error occured.';
+        }
+
         res.send(response);
     }
 });

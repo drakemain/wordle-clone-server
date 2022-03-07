@@ -1,10 +1,12 @@
 import { GuessedWord, GuessedChar } from './types';
+import { WordleError, ErrorCode } from './types';
 
 const WORDLE_WORD_LEN = 5;
 
 export default function checkGuessedWord(guess: string, actual: string): GuessedWord {
     if (guess.length !== WORDLE_WORD_LEN) {
-        throw new Error(`Invalid guess! Guess must be of length ${WORDLE_WORD_LEN}.`);
+        throw new WordleError(`Invalid guess! Guess must be of length ${WORDLE_WORD_LEN}.`,
+            ErrorCode.GuessBadLen);
     }
 
     const guessedWord = buildGuessedWord();
