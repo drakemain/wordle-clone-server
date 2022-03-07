@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "tsc && node -r source-map-support/register dist/index.js",
+    "start": "tsc && node -r source-map-support/register dist/src/index.js",
     "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
