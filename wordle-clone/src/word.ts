@@ -13,8 +13,6 @@ export default class Word {
     }
 
     public async getCurrentWord(): Promise<string> {
-        console.log('GETTING CURRENT WORD');
-
         if (this._currentWord === null) {
             await this.selectNextWord();
         }
@@ -23,17 +21,13 @@ export default class Word {
     }
 
     private async loadWordQueue(): Promise<null> {
-        console.log('LOADING WORD QUEUE');
-
         return new Promise((res, rej) => {
             const wordFile = join(__dirname, '..', '..', 'words_5.txt');
-            console.log(wordFile);
+
             readFile(wordFile, {encoding: 'utf8'}, (err, data) => {
                 if (err) {
                     rej(err);
                 }
-
-                console.log(data);
 
                 let words = data.trim().split('\n');
 
@@ -55,8 +49,6 @@ export default class Word {
     }
 
     private async selectNextWord() {
-        console.log('SELECTING NEW WORD');
-
         if (this.wordsQueue.length === 0) {
             await this.loadWordQueue();
         }

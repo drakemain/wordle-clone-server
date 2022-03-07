@@ -5,3 +5,8 @@ export enum GuessedChar {
 };
 
 export type GuessedWord = [GuessedChar, GuessedChar, GuessedChar, GuessedChar, GuessedChar];
+
+export type GuessResponse = {
+    errmsg?: string,
+    payload?: any
+};

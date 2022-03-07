@@ -3,8 +3,8 @@ import { GuessedWord, GuessedChar } from './types';
 const WORDLE_WORD_LEN = 5;
 
 export default function checkGuessedWord(guess: string, actual: string): GuessedWord {
-    if (guess.length !== WORDLE_WORD_LEN || actual.length !== WORDLE_WORD_LEN) {
-        throw new Error(`Invalid input! guess: ${guess}, actual ${actual}, required len: ${WORDLE_WORD_LEN}`);
+    if (guess.length !== WORDLE_WORD_LEN) {
+        throw new Error(`Invalid guess! Guess must be of length ${WORDLE_WORD_LEN}.`);
     }
 
     const guessedWord = buildGuessedWord();

@@ -1,17 +1,36 @@
+import express from 'express';
+import bodyParser from 'body-parser';
+
 import Word from './word';
 import checkGuessedWord from './word_check';
+import { GuessResponse } from './types';
 
+const app = express();
 const wordManager = new Word();
-(async () => {
-    const word = await wordManager.getCurrentWord();
-    const guess1 = 'hello';
-    const guess2 = 'world';
+const PORT = 8080;
 
-    const res1 = checkGuessedWord(guess1, word);
-    const res2 = checkGuessedWord(guess2, word);
+app.use(bodyParser.urlencoded({extended: false}));
 
-    console.log(guess1, res1);
-    console.log(guess2, res2);
+app.listen(PORT, () => {
+    console.log(`Listening on port ${PORT}`);
+});
 
-    console.log(`The selected word is: ${word}`);
-})();
+app.get('/', (_, res) => {
+    res.send('Hello World');
+});
+
+app.get('/guess/:word', async (req, res) => {
+    const guessedWord = req.params['word'];
+    const actualWord = await wordManager.getCurrentWord();
+    const response: GuessResponse = {};
+
+    try {
+        response.payload = checkGuessedWord(guessedWord, actualWord);
+        res.status(200);
+        res.send(response);
+    } catch (e) {
+        res.status(300);
+        response.errmsg = (e as Error).message;
+        res.send(response);
+    }
+});
