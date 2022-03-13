@@ -11,6 +11,8 @@ export default class Word {
         // 24 hours
         const intervalLen = 24 * 60 * 60 * 1000;
 
+        this.selectNextWord();
+
         this.intervalId = setInterval(() => {
             this.selectNextWord();
         }, intervalLen);
@@ -21,7 +23,6 @@ export default class Word {
             await this.selectNextWord();
         }
 
-        console.log(this.currentWord);
         return this.currentWord as string;
     }
 
@@ -64,5 +65,6 @@ export default class Word {
         }
 
         this.currentWord = this.wordsQueue.pop() as string;
+      console.log(`Selected next word: ${this.currentWord}.`);
     }
 };

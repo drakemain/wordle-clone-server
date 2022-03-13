@@ -20,9 +20,12 @@ app.get('/', (_, res) => {
 });
 
 app.get('/guess/:word', async (req, res) => {
-    const guessedWord = req.params['word'];
+    const guessedWord = req.params['word'].toLowerCase();
     const actualWord = await wordManager.getCurrentWord();
     const response: GuessResponse = {};
+    res.status(200);
+
+    console.log(`Client guessed: ${guessedWord} (${actualWord})`);
 
     try {
         if (!wordManager.isValidWord(guessedWord)) {
@@ -30,15 +33,13 @@ app.get('/guess/:word', async (req, res) => {
         }
 
         response.payload = checkGuessedWord(guessedWord, actualWord);
-        res.status(200);
         res.send(response);
     } catch (e) {
-        res.status(300);
-
         if (e instanceof WordleError) {
             response.errcode = e.code;
             response.errmsg = e.message;
         } else {
+            res.status(300);
             console.error('UNHANDLED ERROR!');
             console.error(e);
             response.errmsg = 'An error occured.';
